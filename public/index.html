@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <div id="entryPopup" class="popup">
+        <div class="popup-content">
+            <p>Move your head to avoid<br> the green ball.</p>
+            <button id="startButton">Play</button>
+        </div>
+    </div>
+
+    <div id="endgame" class="popup">
+        <div class="popup-content">
+            <p>Your score:</p>
+            <div id="score">
+                
+            </div>
+            <input type="text" id="username" placeholder="Your name"></input>
+            <button id="uploadButton">Upload</button>
+            <button id="replayButton">Replay</button>
+        </div>
+    </div>
+
+    <script src="sketch.js"></script>
+  </body>
+</html>
