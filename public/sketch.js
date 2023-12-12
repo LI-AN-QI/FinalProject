@@ -144,11 +144,35 @@ let pose;
 let bounceBall;
 let speed = 4; // initial velocity： 4
 let maxRadius = 250; // max radius: 150
+let bounceSound;
+let bgm;
+let lose;
 
 
 //TIMER:
 let timerInterval; // 定义计时器变量
 let gameTime = 0; // 游戏时间（秒）
+
+let yellowBallImage; // 保存黄色小球的图片对象
+
+
+function preload(){
+  // yellowBallImage = loadImage('Star.png');
+  yellowBallImage = loadImage('Star.png', () => {
+    console.log('图像加载完成');
+  });
+
+  //弹跳音效
+  bounceSound = loadSound('Bounce.mp3');
+  bgm = loadSound('bgm.mp3')
+  lose = loadSound('lose.mp3')
+
+}
+
+function playBounceSound(){
+  bounceSound.play();
+}
+
 
 function setup() {
   createCanvas(648, 480);
@@ -158,13 +182,52 @@ function setup() {
   poseNet.on('pose', gotPoses);
   bounceBall = new BounceBall(width / 2, height / 2, 40, color(0, 255, 0)); // initial radius: 40
   bounceBall.speed *= 2; // initial velocity * 2
+  setTimeout(() => {
+
+    createYellowBall();
+  }, 3000);
+
+
 }
 
 
+function createYellowBall() {
+  // 随机生成黄色小球的位置
+  let x = random(width);
+  let y = random(height);
+
+  // 在画布上显示黄色小球图片
+  displayYellowBall(x, y);
+
+  // 在5秒后调用函数隐藏黄色小球
+  setTimeout(() => {
+    hideYellowBall();
+  }, 5000);
+}
+
+function displayYellowBall(x, y) {
+  // 显示图片
+  image(yellowBallImage, x, y,400,400);
+}
+
+function hideYellowBall() {
+  // 清除画布上的内容，可以根据具体情况调整
+  clear();
+  // 在这里可以添加其他隐藏黄色小球的逻辑
+}
+
+
+function generateYellowBall() {
+  // 随机生成黄色小球的位置
+  let yellowBall = new BounceBall(random(width), random(height), 20, color(255, 255, 0));
+  yellowBall.displayForSeconds(5); // 显示黄色小球5秒
+  yellowBalls.push(yellowBall); // 将黄色小球添加到数组中
+}
 
 
 function startGame() {
   // 开始游戏时，重置游戏时间和显示
+
   gameTime = 0;
 
   bounceBall.reset(); // 重置绿球位置和状态
@@ -172,6 +235,7 @@ function startGame() {
   // 设置周期性计时器，每1000毫秒（1秒）执行一次updateTimer函数
   timerInterval = setInterval(updateTimer, 1000);
   gameStarted = true; // 设置游戏开始标志
+  bgm.play();
 }
 
 
@@ -195,6 +259,10 @@ function displayGameTime() {
 }
 
 function endGame() {
+//stop bgm
+bgm.pause();
+
+
   // 游戏结束时清除计时器
   clearInterval(timerInterval);
 
@@ -219,6 +287,7 @@ function gotPoses(poses) {
       if (distance < bounceBall.r) {
         bounceBall.stop();
         endGame();
+        lose.play();
       }
     }
   }
@@ -265,6 +334,8 @@ function draw() {
 
   translate(width, 0);
   scale(-1, 1);
+  // 设置字体
+  textFont('Silkscreen', 32);
   displayGameTime();
 
 
@@ -305,17 +376,21 @@ class BounceBall {
     if (this.x > width - this.r) {
     this.x = width - this.r; // 将 x 设置为画布右边缘
     this.xSpeed *= -1; // 反转 x 速度
+    playBounceSound(); // 播放音效
   } else if (this.x < this.r) {
     this.x = this.r; // 将 x 设置为画布左边缘
     this.xSpeed *= -1; // 反转 x 速度
+    playBounceSound(); // 播放音效
   }
 
   if (this.y > height - this.r) {
     this.y = height - this.r; // 将 y 设置为画布底边缘
     this.ySpeed *= -1; // 反转 y 速度
+    playBounceSound(); // 播放音效
   } else if (this.y < this.r) {
     this.y = this.r; // 将 y 设置为画布顶边缘
     this.ySpeed *= -1; // 反转 y 速度
+    playBounceSound(); // 播放音效
   }
     
   }
@@ -326,8 +401,8 @@ class BounceBall {
 
 
   reset() {
-    this.x = width / 4;
-    this.y = height / 8;
+    this.x = random(0,width);
+    this.y = random(0,height);
     this.r = 40; // 初始半径
     this.stopped = false;
   }

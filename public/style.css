@@ -5,10 +5,12 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Silkscreen', sans-serif;
   }
   
   canvas {
     display: block;
+    margin-left: -8px;
   }
 
   /* 弹窗样式 */
@@ -22,6 +24,7 @@ html, body {
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 1;
     text-align: center;
+    font-family: 'Silkscreen', sans-serif;
 }
 
 .popup-content {
@@ -32,16 +35,18 @@ html, body {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family: 'Silkscreen', sans-serif;
 }
 
 /* 按钮样式 */
-#startButton {
+#startButton, #uploadButton,#replayButton {
     background-color: #007BFF;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    font-family: 'Silkscreen', sans-serif;
 }
 
 
@@ -55,9 +60,11 @@ html, body {
   display: inline;
   font-size:15px;
   margin-right: 10px; /* 可选：增加一些右侧间距 */
+  
 }
 .info-container h2 {
     display: inline;
     font-size:15px;
     color:blue
+    
 }

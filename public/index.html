@@ -5,11 +5,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400&display=swap" rel="stylesheet">
     <meta charset="utf-8" />
 
   </head>
   <body>
+    <audio id="Bounce" preload="auto">
+      <source src="Bounce.mp3" type="audio/mp3">
+    </audio>
+    <audio id="bgm" loop>
+      <source src="bgm.mp3" type="audio/mp3">
+    </audio>
+    <audio id="Bounce" preload="auto">
+      <source src="lose.mp3" type="audio/mp3">
+    </audio>
+
+
+    <img src="Star.png" style="position: absolute;margin-left: -74%;"./>
     <div id="entryPopup" class="popup">
         <div class="popup-content">
             <p>Move your head to avoid<br> the green ball.</p>
@@ -25,7 +39,7 @@
 
             </div>
             
-            <input type="text" id="username" placeholder="Your name"></input>
+            <input type="text" id="username" placeholder="Your name" style="font-family: 'Silkscreen', sans-serif;"></input>
             <button id="uploadButton">Upload</button>
             <button id="replayButton">Replay</button>
 
