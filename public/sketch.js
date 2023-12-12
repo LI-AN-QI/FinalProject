@@ -156,6 +156,7 @@ let gameTime = 0; // 游戏时间（秒）
 let yellowBallImage; // 保存黄色小球的图片对象
 
 
+
 function preload(){
   // yellowBallImage = loadImage('Star.png');
   yellowBallImage = loadImage('Star.png', () => {
@@ -273,6 +274,8 @@ yourscoreElement.innerHTML = gameTime ;
   console.log("You have persisted for：" + gameTime + "seconds");
   endgame.style.display = 'block';
 
+    // 播放 "lose.mp3"
+    document.getElementById('lose').play();
 }
 
 
@@ -287,7 +290,6 @@ function gotPoses(poses) {
       if (distance < bounceBall.r) {
         bounceBall.stop();
         endGame();
-        lose.play();
       }
     }
   }
