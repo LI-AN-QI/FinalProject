@@ -19,7 +19,7 @@ db.connect();
 
 
 ////////////////////////////
-app.get('/Detail',(req,res)=>{
+app.post('/Detail',(req,res)=>{
     // console.log(req.body);
 
     let obj = {
@@ -28,16 +28,19 @@ app.get('/Detail',(req,res)=>{
     };
 console.log(obj);
     db.push("score",obj);
-   res.json(obj);
+    res.json(obj);
 });
 
-// app.get('/CheckDetail',(req,res)=>{
-//     db.get("score").then(Data =>{
-//         let obj = {data: Data};
-//         res.json(obj);
-//     })
+app.get('/CheckDetail',(req,res)=>{
+    db.get("score").then(Data =>{
+
+
+        
+        let obj = {data: Data};
+        res.json(obj);
+    })
     
-// });
+});
 
 ////////////////////////////////
 

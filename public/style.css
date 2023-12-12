@@ -43,3 +43,21 @@ html, body {
     border-radius: 5px;
     cursor: pointer;
 }
+
+
+#score{
+  height: 400px; /* 设置容器的高度 */
+  overflow-y: auto; /* 如果内容溢出，显示垂直滚动条 */
+}
+
+.info-container h1{
+  color: black;
+  display: inline;
+  font-size:15px;
+  margin-right: 10px; /* 可选：增加一些右侧间距 */
+}
+.info-container h2 {
+    display: inline;
+    font-size:15px;
+    color:blue
+}

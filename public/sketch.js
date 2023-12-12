@@ -6,6 +6,12 @@ let endgame = document.getElementById('endgame');
 
 let gameStarted = false; // 添加一个标志，表示游戏是否已经开始
 
+
+let upload = document.getElementById('uploadPopup')
+let close = document.getElementById('close')
+
+
+
 window.addEventListener('load',()=>{
 
     document.getElementById('uploadButton').addEventListener('click',()=>{
@@ -32,6 +38,19 @@ window.addEventListener('load',()=>{
         })
         .then(response => response.json())
         .then(data=>{console.log(data)})
+
+        //upload成功弹窗
+        upload.style.display = 'block';
+
+        close.addEventListener('click',function(){
+
+          //Close uploaded
+          upload.style.display = 'none';
+        })
+        
+
+
+
     });
 
 
@@ -44,29 +63,49 @@ window.addEventListener('load',()=>{
     .then(resp=> resp.json())
     .then(data => {
         console.log(data.data);
+
+
+   // 检查是否存在数据
+   if (data.data && data.data.length > 0) {
+    // 按分数降序排列
+    data.data.sort((a, b) => b.Score - a.Score);
+
+
         for(let i=0;i<data.data.length;i++) {                     
-            let name = data.data[i].Name;
-            let score = data.data[i].Score;
         
+          let name = data.data[i].Name;
+          let score = data.data[i].Score;
+  
 
-            // Create a <div> to contain Name and Title
-            let infoDiv = document.createElement('div');
-            infoDiv.className = 'info-container'; // add a css clss name to control the style
 
 
-           // Create a <h1> and get data from the database
-           let nameElement = document.createElement('h1');
-           nameElement.innerHTML = name;
-           infoDiv.appendChild(nameElement);
-
-           // Create a <h2> and get data from the database
-           let scoreElement = document.createElement('h2');
-           scoreElement.innerHTML = score;
-           infoDiv.appendChild(scoreElement);
-
-            // Add the new <div> into the id="score"
-            document.getElementById('score').appendChild(infoDiv);
+             // Create a <div> to contain Name and Title
+             let infoDiv = document.createElement('div');
+             infoDiv.className = 'info-container'; // add a css clss name to control the style
+ 
+ 
+            // Create a <h1> and get data from the database
+            let nameElement = document.createElement('h1');
+            nameElement.innerHTML = name;
+            infoDiv.appendChild(nameElement);
+ 
+            // Create a <h2> and get data from the database
+            let scoreElement = document.createElement('h2');
+            scoreElement.innerHTML = score;
+            infoDiv.appendChild(scoreElement);
+ 
+             // Add the new <div> into the id="score"
+             document.getElementById('score').appendChild(infoDiv);
         }
+
+
+      } else {
+        // 如果没有数据，显示一个提示消息
+        let noDataElement = document.createElement('p');
+        noDataElement.innerHTML = "No data available.";
+        document.getElementById('score').appendChild(noDataElement);
+    }
+
 
     })
 
@@ -158,6 +197,11 @@ function displayGameTime() {
 function endGame() {
   // 游戏结束时清除计时器
   clearInterval(timerInterval);
+
+// 将游戏时间显示在 id="yourscore" 的 div 元素中
+let yourscoreElement = document.getElementById('yourscore');
+yourscoreElement.innerHTML = gameTime ;
+
   console.log("You have persisted for：" + gameTime + "seconds");
   endgame.style.display = 'block';
 
@@ -205,13 +249,17 @@ function draw() {
         bounceBall.checkEdges();
     };
     
+// 如果红球消失在屏幕上，结束游戏
+    if (pose.nose.x > width || pose.nose.x < 0 || pose.nose.y > height || pose.nose.y < 0) {
+      bounceBall.stop();
+      endGame();
+    }
 
     
     if (noseDistance < bounceBall.r) {
       bounceBall.stop();
       endGame();
     }
-    
   }
 
 
@@ -278,8 +326,8 @@ class BounceBall {
 
 
   reset() {
-    this.x = width / 2;
-    this.y = height / 2;
+    this.x = width / 4;
+    this.y = height / 8;
     this.r = 40; // 初始半径
     this.stopped = false;
   }
