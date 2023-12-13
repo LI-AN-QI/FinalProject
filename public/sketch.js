@@ -4,7 +4,7 @@ let uploadButton = document.getElementById('uploadButton');
 let replayButton = document.getElementById('replayButton');
 let endgame = document.getElementById('endgame');
 
-let gameStarted = false; // 添加一个标志，表示游戏是否已经开始
+let gameStarted = false; //check the status of lose.mp3
 
 
 let upload = document.getElementById('uploadPopup')
@@ -39,7 +39,7 @@ window.addEventListener('load',()=>{
         .then(response => response.json())
         .then(data=>{console.log(data)})
 
-        //upload成功弹窗
+        //upload popup window
         upload.style.display = 'block';
 
         close.addEventListener('click',function(){
@@ -65,9 +65,8 @@ window.addEventListener('load',()=>{
         console.log(data.data);
 
 
-   // 检查是否存在数据
+   // sort the scorces
    if (data.data && data.data.length > 0) {
-    // 按分数降序排列
     data.data.sort((a, b) => b.Score - a.Score);
 
 
@@ -79,11 +78,16 @@ window.addEventListener('load',()=>{
 
 
 
-             // Create a <div> to contain Name and Title
+            // Create a <div> to contain Name and Title
              let infoDiv = document.createElement('div');
              infoDiv.className = 'info-container'; // add a css clss name to control the style
  
- 
+             // Create a <span> for the numbering
+             let numberingSpan = document.createElement('span');
+             numberingSpan.className = 'numbering'; // add a class for numbering
+            numberingSpan.textContent = (i + 1) + '.'; // Add numbering (starting from 1)
+             infoDiv.appendChild(numberingSpan);
+          
             // Create a <h1> and get data from the database
             let nameElement = document.createElement('h1');
             nameElement.innerHTML = name;
@@ -91,16 +95,23 @@ window.addEventListener('load',()=>{
  
             // Create a <h2> and get data from the database
             let scoreElement = document.createElement('h2');
-            scoreElement.innerHTML = score;
+            scoreElement.innerHTML = score + 's'; // Add 's' after the score
+            scoreElement.className = 'score'; // add a class name for right alignment
             infoDiv.appendChild(scoreElement);
  
              // Add the new <div> into the id="score"
              document.getElementById('score').appendChild(infoDiv);
+          
+           if (i === 0) {
+        infoDiv.classList.add('first-row');
+          } else if (i === 1) {
+        infoDiv.classList.add('second-row');
+          }
         }
 
 
       } else {
-        // 如果没有数据，显示一个提示消息
+        // notification for "nodata"
         let noDataElement = document.createElement('p');
         noDataElement.innerHTML = "No data available.";
         document.getElementById('score').appendChild(noDataElement);
@@ -116,21 +127,22 @@ window.addEventListener('load',()=>{
 
 
 //////////////////////////////////////////////////////////
-// 当用户点击 "开始" 按钮时
+// when user click start button
 startButton.addEventListener('click', function() {
-    entryPopup.style.display = 'none'// 隐藏弹窗
-    startGame(); // 开始游戏
+    entryPopup.style.display = 'none'
+    startGame(); 
 });
 
-// 在页面加载时显示弹窗
+// entry popup window
 window.onload = function() {
     entryPopup.style.display = 'block';
 };
 
-//当用户点击“Replay"按钮时
+// when user click replay button
 replayButton.addEventListener('click',function(){
-    endgame.style.display = 'none';// 隐藏弹窗
-    startGame(); // 开始游戏
+    endgame.style.display = 'none';
+    startGame(); 
+  hasPlayed = false;
 
 })
 
@@ -142,32 +154,32 @@ let video;
 let poseNet;
 let pose;
 let bounceBall;
-let speed = 4; // initial velocity： 4
-let maxRadius = 250; // max radius: 150
+let speed = 4; // initial speed of bouncing ball
+let maxRadius = 250; // max radius of bouncing ball
 let bounceSound;
 let bgm;
 let lose;
+// check the status of lose.mp3 
+let hasPlayed = false;
+let bounceBallImage;
+let AAA;
 
 
 //TIMER:
-let timerInterval; // 定义计时器变量
-let gameTime = 0; // 游戏时间（秒）
-
-let yellowBallImage; // 保存黄色小球的图片对象
-
+let timerInterval; 
+let gameTime = 0; 
+let yellowBall;
 
 
 function preload(){
-  // yellowBallImage = loadImage('Star.png');
-  yellowBallImage = loadImage('Star.png', () => {
-    console.log('图像加载完成');
-  });
-
-  //弹跳音效
+ 
+  //bouncing sound effect
   bounceSound = loadSound('Bounce.mp3');
   bgm = loadSound('bgm.mp3')
   lose = loadSound('lose.mp3')
-
+  // bouncingball image
+  bounceBallImage = loadImage('planet.png');
+  AAA = loadImage('AAA.png');
 }
 
 function playBounceSound(){
@@ -176,67 +188,29 @@ function playBounceSound(){
 
 
 function setup() {
-  createCanvas(648, 480);
-  video = createCapture(VIDEO);
+  createCanvas(648, 480).position(windowWidth / 2 - 324, windowHeight / 2 - 240);
+
+  video = createCapture(VIDEO).position(windowWidth / 2 - 324, windowHeight / 2 - 240);
+
   video.hide();
   poseNet = ml5.poseNet(video, modelLoaded);
   poseNet.on('pose', gotPoses);
   bounceBall = new BounceBall(width / 2, height / 2, 40, color(0, 255, 0)); // initial radius: 40
   bounceBall.speed *= 2; // initial velocity * 2
-  setTimeout(() => {
-
-    createYellowBall();
-  }, 3000);
-
-
 }
 
 
-function createYellowBall() {
-  // 随机生成黄色小球的位置
-  let x = random(width);
-  let y = random(height);
-
-  // 在画布上显示黄色小球图片
-  displayYellowBall(x, y);
-
-  // 在5秒后调用函数隐藏黄色小球
-  setTimeout(() => {
-    hideYellowBall();
-  }, 5000);
-}
-
-function displayYellowBall(x, y) {
-  // 显示图片
-  image(yellowBallImage, x, y,400,400);
-}
-
-function hideYellowBall() {
-  // 清除画布上的内容，可以根据具体情况调整
-  clear();
-  // 在这里可以添加其他隐藏黄色小球的逻辑
-}
-
-
-function generateYellowBall() {
-  // 随机生成黄色小球的位置
-  let yellowBall = new BounceBall(random(width), random(height), 20, color(255, 255, 0));
-  yellowBall.displayForSeconds(5); // 显示黄色小球5秒
-  yellowBalls.push(yellowBall); // 将黄色小球添加到数组中
-}
 
 
 function startGame() {
-  // 开始游戏时，重置游戏时间和显示
-
   gameTime = 0;
 
-  bounceBall.reset(); // 重置绿球位置和状态
+  bounceBall.reset();
 
-  // 设置周期性计时器，每1000毫秒（1秒）执行一次updateTimer函数
+  // Timer
   timerInterval = setInterval(updateTimer, 1000);
-  gameStarted = true; // 设置游戏开始标志
-  bgm.play();
+  gameStarted = true; 
+  bgm.loop();
 }
 
 
@@ -246,37 +220,45 @@ function startGame() {
 
 
 function updateTimer() {
-  // 计时器更新函数，在每秒触发
   gameTime++;
   displayGameTime();
 }
 
 function displayGameTime() {
-  // 将游戏时间显示在画布上
-  
   textSize(32);
-  fill(0);
+  fill('#f4ef95');
+  
+    stroke('#000000');
+    strokeWeight(3);
+
   text("Game Time: " + gameTime, 50, 50);
 }
 
 function endGame() {
 //stop bgm
 bgm.pause();
-
-
-  // 游戏结束时清除计时器
+  
+    
   clearInterval(timerInterval);
 
-// 将游戏时间显示在 id="yourscore" 的 div 元素中
+
 let yourscoreElement = document.getElementById('yourscore');
-yourscoreElement.innerHTML = gameTime ;
+yourscoreElement.innerHTML = gameTime + '<span class="small-text">s</span>';
+console.log("You have persisted for：" + gameTime + "seconds");
+endgame.style.display = 'block';
 
-  console.log("You have persisted for：" + gameTime + "seconds");
-  endgame.style.display = 'block';
 
-    // 播放 "lose.mp3"
-    document.getElementById('lose').play();
+
+
+  if (!hasPlayed) {
+    lose.play();
+    hasPlayed = true;
+  }
+  
 }
+  
+  
+
 
 
 
@@ -290,6 +272,7 @@ function gotPoses(poses) {
       if (distance < bounceBall.r) {
         bounceBall.stop();
         endGame();
+       
       }
     }
   }
@@ -309,10 +292,9 @@ function draw() {
   if (pose) {
     let eyeR = pose.rightEye;
     let eyeL = pose.leftEye;
-    // let eyeDistance = dist(eyeR.x, eyeR.y, eyeL.x, eyeL.y);
     let noseDistance = dist(bounceBall.x, bounceBall.y, pose.nose.x, pose.nose.y);
-    fill(255, 0, 0);
-    ellipse(pose.nose.x, pose.nose.y, 20);
+
+    image(AAA,pose.nose.x-33, pose.nose.y-33,66,66);
 
     if(gameStarted === true){
         bounceBall.display();
@@ -320,23 +302,24 @@ function draw() {
         bounceBall.checkEdges();
     };
     
-// 如果红球消失在屏幕上，结束游戏
+// end the game if nose is out of the screen
     if (pose.nose.x > width || pose.nose.x < 0 || pose.nose.y > height || pose.nose.y < 0) {
       bounceBall.stop();
       endGame();
+      
     }
 
     
     if (noseDistance < bounceBall.r) {
       bounceBall.stop();
       endGame();
+     
     }
   }
 
 
   translate(width, 0);
   scale(-1, 1);
-  // 设置字体
   textFont('Silkscreen', 32);
   displayGameTime();
 
@@ -360,39 +343,40 @@ class BounceBall {
   }
 
   display() {
-    fill(this.col);
-    ellipse(this.x, this.y, this.r * 2);
+//nose image
+    image(bounceBallImage, this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
   }
 
   move() {
     if (!this.stopped) {
-      this.x += this.xSpeed-random(0,0.5);
-      this.y += this.ySpeed-random(0,0.5);
+      this.x += this.xSpeed-random(1,2);
+      this.y += this.ySpeed-random(1,2);
+
       if (this.r < maxRadius) {
-        this.r += 0.05; // 每帧增加半径直到达到最大半径
+        this.r += 0.1; // radius change
       }
     }
   }
 
   checkEdges() {
     if (this.x > width - this.r) {
-    this.x = width - this.r; // 将 x 设置为画布右边缘
-    this.xSpeed *= -1; // 反转 x 速度
-    playBounceSound(); // 播放音效
+    this.x = width - this.r; 
+    this.xSpeed *= -1; 
+    playBounceSound(); 
   } else if (this.x < this.r) {
-    this.x = this.r; // 将 x 设置为画布左边缘
-    this.xSpeed *= -1; // 反转 x 速度
-    playBounceSound(); // 播放音效
+    this.x = this.r; 
+    this.xSpeed *= -1; 
+    playBounceSound(); 
   }
 
   if (this.y > height - this.r) {
-    this.y = height - this.r; // 将 y 设置为画布底边缘
-    this.ySpeed *= -1; // 反转 y 速度
-    playBounceSound(); // 播放音效
+    this.y = height - this.r; 
+    this.ySpeed *= -1; 
+    playBounceSound(); 
   } else if (this.y < this.r) {
-    this.y = this.r; // 将 y 设置为画布顶边缘
-    this.ySpeed *= -1; // 反转 y 速度
-    playBounceSound(); // 播放音效
+    this.y = this.r; 
+    this.ySpeed *= -1; 
+    playBounceSound(); 
   }
     
   }
@@ -405,7 +389,7 @@ class BounceBall {
   reset() {
     this.x = random(0,width);
     this.y = random(0,height);
-    this.r = 40; // 初始半径
+    this.r = 40; 
     this.stopped = false;
   }
 }

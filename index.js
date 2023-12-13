@@ -1,10 +1,8 @@
 let express = require('express');
 let app = express();
 
-app.use(express.json()); // 添加这一行
+app.use(express.json()); 
 app.use('/', express.static('public'));
-
-
 
 
 let score = [];

@@ -6,8 +6,8 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400&display=swap" rel="stylesheet">
     <meta charset="utf-8" />
 
   </head>
@@ -15,35 +15,43 @@
     <audio id="Bounce" preload="auto">
       <source src="Bounce.mp3" type="audio/mp3">
     </audio>
-    <audio id="bgm" loop>
+    <audio id="bgm">
       <source src="bgm.mp3" type="audio/mp3">
     </audio>
     <audio id="lose" preload="auto">
       <source src="lose.mp3" type="audio/mp3">
     </audio>
-
-
-    <img src="Star.png" style="position: absolute;margin-left: -74%;"./>
+    
+    <h1 id='title'>NEBULA DODGE</h1>
+    <h3 id='tip'>*DON'T MOVE YOUR FACE OFF THE SCREEN, OR THE GAME WILL END.</h3>
+    
+    <div>
+      <img src="Star.png"id='bgstar1'/>
+      <img src="Star.png"id='bgstar2'/>
+      <img src="Star.png"id='bgstar3'/>
+      <img src="Star.png"id='bgstar4'/>
+    </div>
+    
     <div id="entryPopup" class="popup">
-        <div class="popup-content">
-            <p>Move your head to avoid<br> the green ball.</p>
+        <div class="popup-content" id="entrystyle">
+            <p>Move your head to avoid<br> the bouncing planet.</p>
             <button id="startButton">Play</button>
         </div>
     </div>
 
     <div id="endgame" class="popup">
         <div class="popup-content">
-          
             <p>Your score:</p>
             <div id="yourscore">
 
             </div>
-            
-            <input type="text" id="username" placeholder="Your name" style="font-family: 'Silkscreen', sans-serif;"></input>
+            <input type="text" id="username" placeholder="Enter your name" style="font-family: 'Silkscreen', sans-serif;"></input>
+        <div style="margin-top: 20px">
             <button id="uploadButton">Upload</button>
-            <button id="replayButton">Replay</button>
+            <button id="replayButton" style="background-color: #ff8843">Replay</button>
+        </div>
 
-            <h1>LEADERBOARD</h1>
+            <h1 id='leaderboard' style="font-size: 40px">LEADERBOARD</h1>
 
             <div id="score">
 
@@ -51,14 +59,14 @@
 
 
               
-        </div>
+      </div>
 
 
     </div>
 
 
     <div id="uploadPopup" class="popup">
-      <div class="popup-content">
+      <div class="popup-content" id="closestyle">
           <p>Uploaded!</p>
           <button id="close">close</button>
       </div>
@@ -66,5 +74,7 @@
 
 
     <script src="sketch.js"></script>
+
+    
   </body>
 </html>
