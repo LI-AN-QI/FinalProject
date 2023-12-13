@@ -188,7 +188,7 @@ function playBounceSound(){
 
 
 function setup() {
-  createCanvas(648, 480).position(windowWidth / 2 - 324, windowHeight / 2 - 240);
+  createCanvas(640, 480).position(windowWidth / 2 - 324, windowHeight / 2 - 240);
 
   video = createCapture(VIDEO).position(windowWidth / 2 - 324, windowHeight / 2 - 240);
 
