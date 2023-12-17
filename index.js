@@ -8,8 +8,8 @@ app.use('/', express.static('public'));
 let score = [];
 //Connect to the mongo DB
 const { Database } = require("quickmongo");
-// const db = new Database("mongodb+srv://al8286:al8286@cluster0.pksu4yn.mongodb.net/?retryWrites=true&w=majority");
-const db = new Database("mongodb+srv://DB_USERNAME:DB_PASSWORD@cluster0.pksu4yn.mongodb.net/?retryWrites=true&w=majority");
+const db = new Database("mongodb+srv://al8286:al8286@cluster0.pksu4yn.mongodb.net/?retryWrites=true&w=majority");
+// const db = new Database("mongodb+srv://DB_USERNAME:DB_PASSWORD@cluster0.pksu4yn.mongodb.net/?retryWrites=true&w=majority");
 db.on("ready", () => {
     console.log("Connected to the database");
 });
